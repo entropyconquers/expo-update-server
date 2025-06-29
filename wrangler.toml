@@ -1,0 +1,46 @@
+name = "expo-update-server"
+main = "src/worker.ts"
+compatibility_date = "2024-06-25"
+compatibility_flags = ["nodejs_compat"]
+
+# Build configuration for full-stack app
+[build]
+command = "npm run build:full-stack"
+
+# Static assets configuration (serves frontend from /frontend/dist)
+[assets]
+directory = "./frontend/dist"
+binding = "ASSETS"
+
+# D1 Database - will be auto-provisioned with Deploy to Cloudflare
+[[d1_databases]]
+binding = "DB"
+database_name = "expo-update-server"
+# database_id will be automatically populated by Deploy to Cloudflare
+# For local development, create a local D1 database:
+# wrangler d1 create expo-updates-db --local
+database_id = "ff56af0d-bf36-479b-9011-96dd49d7e5fa"
+
+# R2 Object Storage - will be auto-provisioned with Deploy to Cloudflare  
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "expo-update-server"
+
+# KV Storage - will be auto-provisioned with Deploy to Cloudflare
+[[kv_namespaces]]
+binding = "CACHE"
+# id will be automatically populated by Deploy to Cloudflare
+# For local development, create a local KV namespace:
+# wrangler kv:namespace create "CACHE" --local
+id = "3326b0c34862406e89167788f87348ab"
+
+# Environment variables
+[vars]
+ENVIRONMENT = "production"
+
+# Database migrations will run automatically after deployment
+# You can run them manually with: wrangler d1 migrations apply expo-update-server --remote
+
+# For production secrets, set these after deployment:
+# wrangler secret put UPLOAD_SECRET_KEY
+# wrangler secret put CODE_SIGNING_PRIVATE_KEY 
